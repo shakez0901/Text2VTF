@@ -181,6 +181,7 @@ class TextVTF():
         {{\n\
             "$basetexture" "{destination}\\{name}"\n\
             "$translucent" 1\n\
+            "$color" "{{ 255 0 255}}"\n\
         }}'
 
         vmt = vmttext.splitlines(keepends=True)
@@ -189,14 +190,7 @@ class TextVTF():
     def run(self):
         self.root.mainloop()
 
-# def createConfig(): 
-#     config = ConfigParser()
-#     config.read('config.ini')
-#     config.add_section('main')
-#     config.set('main', 'fontPath', 'C:\\Users\\Robse\\Desktop\\roundo-semibold\\Roundo-SemiBold.otf')
-#     config.set('main', 'vtfCmdPath', 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\Counter-Strike Source\\bin\\VTFCmd.exe')
-#     with open('config.ini', 'w') as f:
-#         config.write(f)
+
 def main():
     app = TextVTF()
     app.run()
