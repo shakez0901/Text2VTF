@@ -8,3 +8,5 @@
 - select a font via the **Font** button
 - click **Save As**, select a directory  
 note: must be inside a materials\...\ folder or else it wont create the vmt's
+
+vtcmd: https://developer.valvesoftware.com/wiki/VTFCmd
