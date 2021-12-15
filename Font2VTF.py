@@ -14,9 +14,9 @@ class Font2VTF:
         self.fnt = None
         self.root = tk.Tk()
         self.root.title('Font2VTF')
-        self.SettingsButton = tk.Button(self.root, text='Settings', command=self.Command_FontButton)
+        self.SettingsButton = tk.Button(self.root, text='Font', command=self.Command_FontButton)
         self.SettingsButton.pack()
-        self.saveAsButton = tk.Button(self.root, text='SaveAs', command=self.Command_saveAsButton)
+        self.saveAsButton = tk.Button(self.root, text='Save As', command=self.Command_saveAsButton)
         self.saveAsButton.pack()
         self.statusLabel = tk.Label(text='Status:')
         self.statusLabel.pack()
