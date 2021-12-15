@@ -4,7 +4,7 @@ import os
 import tempfile
 import math
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox, colorchooser
 from configparser import ConfigParser
 import matplotlib.font_manager as fm
 
@@ -13,28 +13,38 @@ import matplotlib.font_manager as fm
 
 class TextVTF():
     def __init__(self):
-        self.W = 256
-        self.H = 256
-        self.resized = False
-        self.tempPath = tempfile.gettempdir()
-        config = ConfigParser()
-        config.read('config.ini')
-        self.fontPath = config.get('main', 'fontpath')
-        # fontPath = 'C:\\Users\\Robse\\Desktop\\roundo-semibold\\Roundo-SemiBold.otf'
-        self.fnt = ImageFont.truetype(self.fontPath, size=128)
-        self.createUI()
+        try:
+            self.W = 256
+            self.H = 256
+            self.resized = False
+            self.tempPath = tempfile.gettempdir()
+            config = ConfigParser()
+            config.read('config.ini')
+            self.fontPath = config.get('main', 'fontpath')
+            self.fnt = ImageFont.truetype(self.fontPath, size=128)
+            self.color = None
+            self.createUI()
+        except:
+            messagebox.showerror("Error", "Check your config.ini")
 
     def createUI(self):
         self.root = tk.Tk()
         self.root.title('Text2VTF')
 
-        self.SettingsButton = tk.Button(self.root, text='Settings',command=self.Command_SettingsButton)
+        self.SettingsButton = tk.Button(self.root, text='Settings', command=self.Command_SettingsButton)
         self.SettingsButton.pack()
-        self.saveAsButton = tk.Button(self.root, text='SaveAs',command=self.Command_saveAsButton)
+        self.saveAsButton = tk.Button(self.root, text='SaveAs', command=self.Command_saveAsButton)
         self.saveAsButton.pack()
+
+        self.colorButton = tk.Button(self.root, command=self.Command_chooseColor)
+        self.colorButton.pack()
 
         self.textField = tk.Text(self.root)
         self.textField.pack()
+    
+    def Command_chooseColor(self):
+        self.color = colorchooser.askcolor()
+        self.colorButton.config(background=self.color[1])
 
     def Command_saveAsButton(self):
         inputText = self.textField.get('1.0','end')
@@ -44,7 +54,7 @@ class TextVTF():
         j = outputPath.rindex('.')
         name = outputPath[i+1:j]
         outputPath = outputPath[0:i+1]
-        self.createTempImage(inputText, name)
+        self.createTempImage(inputText, name, self.color)
         self.createVtf(outputPath, name)
 
     def Command_SettingsButton(self):
@@ -129,7 +139,7 @@ class TextVTF():
         with open('config.ini', 'w') as f:
             config.write(f)
 
-    def createTempImage(self, txt, name):
+    def createTempImage(self, txt, name, color):
         tmpImg = Image.new("RGBA",(self.W,self.H), (255,255,255,0))
         draw = ImageDraw.Draw(tmpImg)
         w, h = draw.textsize(text=txt,font=self.fnt)
@@ -150,7 +160,7 @@ class TextVTF():
 
         midW = round((self.W-w)/2)
         midH = round((self.H-h)/2)
-        draw.text((midW, midH), text=txt, font=self.fnt, fill='white',align='center') ##draw the text in the center of the image
+        draw.text((midW, midH), text=txt, font=self.fnt, fill=self.color[1],align='center') ##draw the text in the center of the image
 
         self.tmpimgPath = self.tempPath+'/'+name+'.png'
         tmpImg.save(self.tmpimgPath)
@@ -181,7 +191,6 @@ class TextVTF():
         {{\n\
             "$basetexture" "{destination}\\{name}"\n\
             "$translucent" 1\n\
-            "$color" "{{ 255 0 255}}"\n\
         }}'
 
         vmt = vmttext.splitlines(keepends=True)
